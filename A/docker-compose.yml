@@ -1,0 +1,31 @@
+version: '3'
+services:
+  homecolis-api:
+   image: homecolis-api:latest
+   environment:
+   - NODE_ENV=development
+   - PORT=8080
+   - MONGO_HOST=mongo_db
+   - MONGO_PORT=27017
+   - MONGO_USER=user
+   - MONGO_PASSWORD=password
+   ports:
+   - 80:8080
+   links:
+   - mongo_db:mongo_db
+   depends_on:
+   - mongo_db
+   build: .
+   
+  mongo_db:
+   image: mongo:latest
+   environment:
+   - MONGODB_ADMIN_USER=root
+   - MONGODB_ADMIN_PASS=pass
+   - MONGODB_APPLICATION_DATABASE=database
+   - MONGODB_APPLICATION_USER=user
+   - MONGODB_APPLICATION_PASS=password
+   command:
+    - '--auth'
+   volumes:
+   - ./data-db:/data/db
