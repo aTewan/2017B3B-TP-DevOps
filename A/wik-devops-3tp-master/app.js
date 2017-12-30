@@ -1,3 +1,4 @@
+
 // Récupération des variables d'environnement
 const PORT = process.env.PORT || 8080
 const ENV = process.env.NODE_ENV || process.env.ENV || 'development'
@@ -51,13 +52,23 @@ app.listen(PORT, () => {
   console.log(`Server launched on port ${PORT}, environment is ${ENV}`)
 })
 
-// Lancement de la connection
-mongoose.connect(mongoUri, {
-  user: MONGO_USER,
-  pass: MONGO_PASSWORD,
-  useMongoClient: true,
-}).then(() => {
-  mongoError = null
-}).catch((err) => {
-  mongoError = err
-})
+//Lancement de la connexion
+var waitForMongo = require('wait-for-mongodb');
+
+waitForMongo(mongoUri, {timeout: 3000 * 60* 2}, function(err) {
+  if(err) {
+    console.log('timeout exceeded');
+  } else {
+    console.log('mongodb comes online');
+    mongoose.connect(mongoUri, {
+      user: MONGO_USER,
+      pass: MONGO_PASSWORD,
+      useMongoClient: true,
+    }).then(() => {
+      mongoError = null
+    }).catch((err) => {
+      mongoError = err
+    })
+
+  }
+});
