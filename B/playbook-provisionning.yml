@@ -1,0 +1,19 @@
+---
+- name: Mise en place de mongodb
+  hosts: mongo
+  remote_user: ubuntu
+  ignore_erros: true
+  roles: 
+  - greendayonfire.mongodb
+  vars:
+     mongodb_security_authorization: "enabled"
+     mongodb_net_bindip: 0.0.0.0
+     mongodb_users : -{
+      name: user,
+      password: password,
+      roles: root,
+      database: test}
+     mongodb_login_host: mongo-master
+     mongodb_replication_params: 
+      - {host_name: mongo-slave, host_port: "27017", host_type: replica}
+
